@@ -1,0 +1,10 @@
+.git
+.gitignore
+docker-compose.yml*
+configs
+debmirror@.service
+docker-compose.yml
+progress-mirror.sh
+update-mirror.sh
+README.md
+INSTALL.md
