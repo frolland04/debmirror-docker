@@ -1,0 +1,27 @@
+name: ${MIRROR_NAME:?MIRROR_NAME doit être défini dans le fichier .env}
+
+services:
+  web:
+    image: nginx:alpine
+    container_name: ${MIRROR_NAME}-nginx
+    ports:
+      - "${PORT}:80"
+    volumes:
+      - ${MIRROR_DATA:-/data/debmirror/${MIRROR_NAME}}:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    restart: always
+
+  updater:
+    build: .
+    container_name: ${MIRROR_NAME}-updater
+    volumes:
+      - ${MIRROR_DATA:-/data/debmirror/${MIRROR_NAME}}:/data/mirror
+    environment:
+      - MIRROR_HOST=${MIRROR_HOST}
+      - MIRROR_ROOT=${MIRROR_ROOT}
+      - MIRROR_METHOD=${MIRROR_METHOD:-http}
+      - ARCHITECTURES=${ARCHITECTURES}
+      - SECTIONS=${SECTIONS}
+      - KEYRING=${KEYRING:-}
+      - DRY_RUN=${DRY_RUN:-0}
+    profiles: ["update"]

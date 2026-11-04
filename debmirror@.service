@@ -1,0 +1,17 @@
+[Unit]
+Description=Service Nginx pour Miroir de Paquets APT (%i)
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/debmirror
+# On utilise --env-file pour charger la configuration correspondante à l'instance
+ExecStart=/usr/bin/docker compose --env-file ./configs/%i.env up web
+ExecStop=/usr/bin/docker compose --env-file ./configs/%i.env down
+Restart=always
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target
