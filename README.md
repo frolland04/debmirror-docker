@@ -100,6 +100,36 @@ Occupation disque d'un miroir :
 du -sh /data/debmirror/mirror-debian_12/*
 ```
 
+## Utilisation via make
+Le `Makefile` regroupe les opérations courantes. Les cibles propres à un miroir prennent `CONFIG=<chemin du fichier .env>`, résolu depuis le répertoire courant. `make` (ou `make help`) liste les cibles.
+
+| Cible | Action |
+|---|---|
+| `list` | Liste les configurations (nom, port, hôte) |
+| `check` | Vérifie toutes les configurations : variables obligatoires, `PORT` / `MIRROR_NAME` en doublon, `docker compose config` |
+| `start-web` / `stop-web` | Démarre / arrête le nginx du miroir via docker compose (`stop-web` n'arrête pas une mise à jour en cours) |
+| `build` | Reconstruit l'image de mise à jour (nécessaire après une modification d'`entrypoint.sh`) |
+| `start-update` / `stop-update` | Lance une mise à jour en arrière-plan / arrête la mise à jour en cours |
+| `dry-run` | Estimation du volume à télécharger (premier plan) |
+| `show-progress` | Suit l'avancement de la mise à jour en cours |
+| `logs` | Logs de la mise à jour en cours, sinon journal de `debmirror-update@<nom>.service` |
+| `status` | État du nginx, de la mise à jour et du timer |
+| `du` | Occupation disque du miroir |
+| `start-timer` / `stop-timer` | Active / désactive `debmirror-update@<nom>.timer` (systemd) |
+| `install` / `uninstall` | Installe / supprime les unités systemd dans `/etc/systemd/system` (désactiver d'abord les timers) |
+
+Exemples :
+```bash
+make start-web CONFIG=configs/ubuntu_20.04.env
+make start-update CONFIG=configs/ubuntu_20.04.env
+make show-progress CONFIG=configs/ubuntu_20.04.env
+sudo make install
+sudo make start-timer CONFIG=configs/ubuntu_20.04.env
+```
+Le Makefile n'utilise pas `sudo` : lancez `sudo make …` pour les cibles systemd. Les unités systemd lisent `/opt/debmirror/configs/<nom>.env`, où `<nom>` est le nom du fichier sans `.env`. `start-timer` et `stop-timer` affichent un avertissement si `CONFIG` désigne un autre fichier.
+
+`make start-web` et `debmirror@.service` gèrent le même conteneur nginx : n'utilisez pas les deux pour un même miroir.
+
 ## 4. Configuration des racines (`MIRROR_ROOT`)
 Un même miroir peut synchroniser et servir plusieurs racines de l'hôte amont. `MIRROR_ROOT` contient un ou plusieurs groupes `racine:releases`, séparés par des espaces (valeur entre guillemets) :
 ```bash
