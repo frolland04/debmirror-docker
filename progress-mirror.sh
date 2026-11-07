@@ -1,19 +1,25 @@
 #!/bin/bash
 # Suit l'avancement de la synchronisation en cours d'un miroir.
 # Affiche la racine en cours, le volume à télécharger, le pourcentage et le récapitulatif final.
-cd "$(dirname "${0}")" || exit
+
+usage() {
+    echo "Usage : ${0} <fichier_de_configuration>"
+    echo "Exemple : ${0} configs/debian_11.env"
+}
 
 if [ -z "${1}" ]; then
-    echo "Usage : ${0} <nom_du_miroir>"
-    echo "Exemple : ${0} debian_11"
+    echo "Erreur : Vous devez spécifier le chemin du fichier de configuration du miroir."
+    usage
     exit 1
 fi
 
-CONFIG_FILE="configs/${1}.env"
-if [ ! -f "${CONFIG_FILE}" ]; then
-    echo "Erreur : Le fichier de configuration ${CONFIG_FILE} n'existe pas."
+# Le chemin est résolu par rapport au répertoire courant.
+if [ ! -f "${1}" ]; then
+    echo "Erreur : Le fichier de configuration ${1} n'existe pas."
+    usage
     exit 1
 fi
+CONFIG_FILE="${1}"
 
 PROJECT="${MIRROR_NAME:-$(sed -n 's/^MIRROR_NAME=//p' "${CONFIG_FILE}")}"
 CONTAINER="$(docker ps \

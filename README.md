@@ -46,18 +46,18 @@ systemctl enable --now debmirror@ubuntu_26.04
 ```
 
 ## 3. Mise à jour des miroirs
-La mise à jour se fait avec le script commun en passant le nom de la configuration en paramètre :
+La mise à jour se fait avec le script commun en passant en paramètre le chemin du fichier de configuration du miroir. Un chemin relatif est résolu depuis le répertoire courant :
 ```bash
 cd /opt/debmirror
-./update-mirror.sh debian_11_snapshot_20260824
-./update-mirror.sh debian_13
-./update-mirror.sh ubuntu_24.04
+./update-mirror.sh configs/debian_11_snapshot_20260824T0000000.env
+./update-mirror.sh configs/debian_13.env
+./update-mirror.sh /opt/debmirror/configs/ubuntu_24.04.env
 ```
 Le script se termine avec un code non nul si la mise à jour a échoué.
 
 ### Estimer le volume à télécharger (dry-run)
 ```bash
-./update-mirror.sh debian_12 --dry-run
+./update-mirror.sh configs/debian_12.env --dry-run
 ```
 Seuls les fichiers d'index sont téléchargés (dans le répertoire `.temp` de chaque racine), aucun paquet n'est récupéré et le nettoyage est seulement simulé. Pour chaque racine, debmirror affiche :
 ```
@@ -68,7 +68,7 @@ Ce chiffre correspond à la différence entre les index amont et ce qui est déj
 ### Suivre l'avancement d'une synchronisation
 Depuis un autre terminal, pendant qu'un `update-mirror.sh` est en cours :
 ```bash
-./progress-mirror.sh debian_12
+./progress-mirror.sh configs/debian_12.env
 ```
 Le script affiche la racine en cours, `Files to download`, le pourcentage (en octets, il repart de 0 pour chaque racine) et le récapitulatif final. Ctrl+C arrête le suivi, sans arrêter la synchronisation.
 

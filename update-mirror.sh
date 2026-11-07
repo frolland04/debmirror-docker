@@ -1,14 +1,13 @@
 #!/bin/bash
-cd "$(dirname "${0}")" || exit
 
 usage() {
-    echo "Usage : ${0} <nom_du_miroir> [--dry-run]"
-    echo "Exemple : ${0} debian_11"
-    echo "          ${0} debian_11 --dry-run   # estimation de ce qu'il reste à télécharger"
+    echo "Usage : ${0} <fichier_de_configuration> [--dry-run]"
+    echo "Exemple : ${0} configs/debian_11.env"
+    echo "          ${0} configs/debian_11.env --dry-run   # estimation de ce qu'il reste à télécharger"
 }
 
 if [ -z "${1}" ]; then
-    echo "Erreur : Vous devez spécifier le nom du miroir. C'est le même que le nom du fichier de configuration."
+    echo "Erreur : Vous devez spécifier le chemin du fichier de configuration du miroir."
     usage
     exit 1
 fi
@@ -21,11 +20,15 @@ case "${2}" in
 esac
 export DRY_RUN
 
-CONFIG_FILE="configs/${1}.env"
-if [ ! -f "${CONFIG_FILE}" ]; then
-    echo "Erreur : Le fichier de configuration ${CONFIG_FILE} n'existe pas."
+# Le chemin est résolu par rapport au répertoire courant, avant le changement de répertoire.
+if [ ! -f "${1}" ]; then
+    echo "Erreur : Le fichier de configuration ${1} n'existe pas."
+    usage
     exit 1
 fi
+CONFIG_FILE="$(realpath "${1}")"
+
+cd "$(dirname "${0}")" || exit
 
 if [ "${DRY_RUN}" = "1" ]; then
     echo "Lancement de l'estimation (dry-run) pour ${1}..."
