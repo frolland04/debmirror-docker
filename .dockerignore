@@ -3,6 +3,8 @@
 docker-compose.yml*
 configs
 debmirror@.service
+debmirror-update@.service
+debmirror-update@.timer
 docker-compose.yml
 progress-mirror.sh
 update-mirror.sh

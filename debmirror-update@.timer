@@ -1,0 +1,12 @@
+[Unit]
+Description=Mise à jour périodique du miroir de paquets APT (%i)
+
+[Timer]
+# Toutes les 6 heures (00:00, 06:00, 12:00, 18:00), décalé aléatoirement de 0 à 4 h.
+OnCalendar=00/6:00
+RandomizedDelaySec=4h
+# Rattrape un déclenchement manqué (machine éteinte) au démarrage suivant.
+Persistent=true
+
+[Install]
+WantedBy=timers.target

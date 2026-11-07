@@ -45,6 +45,29 @@ systemctl enable --now debmirror@ubuntu_24.04
 systemctl enable --now debmirror@ubuntu_26.04
 ```
 
+### Mise à jour périodique (timer)
+Le template `debmirror-update@.timer` déclenche `debmirror-update@.service`, qui lance `update-mirror.sh` avec `configs/<instance>.env`. Le déclenchement a lieu toutes les 6 heures (00:00, 06:00, 12:00, 18:00), décalé aléatoirement de 0 à 4 h pour étaler les miroirs. Un déclenchement manqué (machine éteinte) est rattrapé au démarrage suivant. En cas d'échec, il n'y a pas de relance immédiate : le déclenchement suivant fait office de nouvelle tentative. Si une mise à jour est encore en cours, elle n'est pas relancée.
+
+Installation :
+```bash
+cp /opt/debmirror/debmirror-update@.service /opt/debmirror/debmirror-update@.timer /etc/systemd/system/
+systemctl daemon-reload
+```
+
+Activer ou désactiver la mise à jour périodique d'un miroir :
+```bash
+systemctl enable --now debmirror-update@debian_12.timer
+systemctl disable --now debmirror-update@debian_12.timer
+```
+
+Suivi :
+```bash
+systemctl list-timers 'debmirror-update@*'
+systemctl status debmirror-update@debian_12.service
+journalctl -u debmirror-update@debian_12.service -f
+```
+Pour lancer une mise à jour tout de suite via systemd : `systemctl start --no-block debmirror-update@debian_12.service`.
+
 ## 3. Mise à jour des miroirs
 La mise à jour se fait avec le script commun en passant en paramètre le chemin du fichier de configuration du miroir. Un chemin relatif est résolu depuis le répertoire courant :
 ```bash

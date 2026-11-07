@@ -1,0 +1,14 @@
+[Unit]
+Description=Mise à jour du miroir de paquets APT (%i)
+Requires=docker.service
+After=docker.service network-online.target
+Wants=network-online.target
+
+[Service]
+# Déclenché par debmirror-update@%i.timer. Une instance déjà en cours n'est pas relancée.
+# Pas de relance immédiate en cas d'échec : le prochain déclenchement du timer fait office de relance.
+Type=oneshot
+WorkingDirectory=/opt/debmirror
+ExecStart=/opt/debmirror/update-mirror.sh ./configs/%i.env
+User=root
+Group=root
