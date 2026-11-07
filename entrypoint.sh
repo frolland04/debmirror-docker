@@ -44,7 +44,7 @@ for entry in "${ENTRIES[@]}"; do
     dists="${entry#*:}"
 
     if [[ "${entry}" != *:* || "${root}" != /* || "${root}" == "/" || -z "${dists}" ]]; then
-        echo "Erreur : entrée MIRROR_ROOT invalide '${entry}' (format attendu : /racine:release1,release2)."
+        echo "Erreur : entrée MIRROR_ROOT invalide \"${entry}\" (format attendu : /racine:release1,release2)."
         SUMMARY+=("ÉCHEC  ${entry} (format invalide)")
         FAILED=1
         continue
@@ -55,13 +55,13 @@ for entry in "${ENTRIES[@]}"; do
 
     echo "=========================================="
     echo "Démarrage de debmirror..."
-    echo "Hôte         : ${MIRROR_HOST}"
-    echo "Racine       : ${root}"
-    echo "Releases     : ${dists}"
-    echo "Architecture : ${ARCHITECTURES}"
-    echo "Sections     : ${SECTIONS}"
-    echo "Keyring      : ${KEYRING_PATH}"
-    echo "Destination  : ${dest}"
+    echo "Hôte         : \"${MIRROR_HOST}\""
+    echo "Racine       : \"${root}\""
+    echo "Releases     : \"${dists}\""
+    echo "Architecture : \"${ARCHITECTURES}\""
+    echo "Sections     : \"${SECTIONS}\""
+    echo "Keyring      : \"${KEYRING_PATH}\""
+    echo "Destination  : \"${dest}\""
     [ "${DRY_RUN}" = "1" ] && echo "Mode         : dry-run (estimation, aucun paquet téléchargé)"
     echo "=========================================="
 

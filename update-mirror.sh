@@ -16,13 +16,13 @@ DRY_RUN=0
 case "${2}" in
     "") ;;
     --dry-run) DRY_RUN=1 ;;
-    *) echo "Erreur : option inconnue '${2}'."; usage; exit 1 ;;
+    *) echo "Erreur : option inconnue \"${2}\"."; usage; exit 1 ;;
 esac
 export DRY_RUN
 
 # Le chemin est résolu par rapport au répertoire courant, avant le changement de répertoire.
 if [ ! -f "${1}" ]; then
-    echo "Erreur : Le fichier de configuration ${1} n'existe pas."
+    echo "Erreur : Le fichier de configuration \"${1}\" n'existe pas."
     usage
     exit 1
 fi
@@ -31,15 +31,15 @@ CONFIG_FILE="$(realpath "${1}")"
 cd "$(dirname "${0}")" || exit
 
 if [ "${DRY_RUN}" = "1" ]; then
-    echo "Lancement de l'estimation (dry-run) pour ${1}..."
+    echo "Lancement de l'estimation (dry-run) pour \"${1}\"..."
 else
-    echo "Lancement de la mise à jour pour ${1}..."
+    echo "Lancement de la mise à jour pour \"${1}\"..."
 fi
 docker compose --env-file "${CONFIG_FILE}" run --rm updater
 rc=${?}
 if [ "${rc}" -ne 0 ]; then
-    echo "Processus de mise à jour de ${1} terminé en erreur (code ${rc})."
+    echo "Processus de mise à jour de \"${1}\" terminé en erreur (code ${rc})."
 else
-    echo "Processus de mise à jour de ${1} terminé."
+    echo "Processus de mise à jour de \"${1}\" terminé."
 fi
 exit "${rc}"

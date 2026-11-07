@@ -15,7 +15,7 @@ fi
 
 # Le chemin est résolu par rapport au répertoire courant.
 if [ ! -f "${1}" ]; then
-    echo "Erreur : Le fichier de configuration ${1} n'existe pas."
+    echo "Erreur : Le fichier de configuration \"${1}\" n'existe pas."
     usage
     exit 1
 fi
@@ -28,11 +28,11 @@ CONTAINER="$(docker ps \
     --format '{{.Names}}' | head -n 1)"
 
 if [ -z "${CONTAINER}" ]; then
-    echo "Aucune synchronisation en cours pour ${1} (projet ${PROJECT})."
+    echo "Aucune synchronisation en cours pour \"${1}\" (projet \"${PROJECT}\")."
     exit 1
 fi
 
-echo "Suivi de ${CONTAINER} (Ctrl+C pour quitter, la synchronisation continue)..."
+echo "Suivi de \"${CONTAINER}\" (Ctrl+C pour quitter, la synchronisation continue)..."
 docker logs -f "${CONTAINER}" 2>&1 \
     | grep --line-buffered -oE '^(Racine .*|Releases .*|Mode .*|Files to download.*|\[ *[0-9]+%\]|Récapitulatif.*|  (OK|ÉCHEC) .*|Mise à jour du miroir .*)' \
     | uniq
