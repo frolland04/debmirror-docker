@@ -36,7 +36,7 @@ systemctl daemon-reload
 Vous pouvez maintenant allumer indépendamment vos 8 miroirs :
 ```bash
 systemctl enable --now debmirror@debian_11
-systemctl enable --now debmirror@debian_11_snapshot_20260824
+systemctl enable --now debmirror@debian_11_snapshot_20260824T0000000
 systemctl enable --now debmirror@debian_12
 systemctl enable --now debmirror@debian_13
 systemctl enable --now debmirror@ubuntu_20.04
@@ -118,7 +118,7 @@ deb http://<hote>:32012/debian-security bookworm-security main contrib non-free 
 ```
 Pour Ubuntu : `deb http://<hote>:42404/ubuntu noble main restricted universe multiverse` (idem pour `noble-updates`, `noble-security` et `noble-backports`).
 
-Pour le snapshot Debian 11 (`debian_11_snapshot_20260824`, hôte `snapshot.debian.org`), le contenu est servi sous le chemin amont complet :
+Pour le snapshot Debian 11 (`debian_11_snapshot_20260824T0000000`, hôte `snapshot.debian.org`), le contenu est servi sous le chemin amont complet :
 ```
 deb http://<hote>:34011/archive/debian/20260824T000000Z bullseye main contrib non-free
 deb http://<hote>:34011/archive/debian/20260824T000000Z bullseye-updates main contrib non-free
